@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To Do Project</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Babylonica&family=Dancing+Script&family=Josefin+Sans:ital@1&family=Lato:wght@400;700&family=Poppins:wght@400;700&display=swap"
+        rel="stylesheet">
+    <style>
+        html {
+            font-size: 100%;
+        }
+
+        @media(max-width:2900px) {
+            html {
+                font-size: 100%;
+            }
+        }
+
+        @media(max-width:1416px) {
+            html {
+                font-size: 70%;
+            }
+        }
+
+        @media(max-width:988px) {
+            html {
+                font-size: 55%;
+            }
+        }
+
+        @media(max-width:768px) {
+            html {
+                font-size: 45%;
+            }
+        }
+
+        @media(max-width:640px) {
+            html {
+                font-size: 35%;
+            }
+        }
+        body
+        {
+            background-color: rgb(199, 206, 204);
+            font-family: 'Poppins', sans-serif;
+        }
+        #div1
+        {
+            display: flex;
+            justify-content: space-evenly;
+            margin: 6.25rem 0;
+        }
+        #container
+        {
+            padding: .625rem;
+            height: auto;
+            width: 25rem;
+            background: rgb(103, 138, 220);
+            border-radius: .25rem;
+        }
+
+        #txt{
+            font-size: 2.5rem;
+            outline: none;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="div1">
+        <div id="container">
+            <h1 style="text-align: center;">This is your task:</h1>
+            
+        </div>
+
+        <div id="container1">
+            <input type="text" id="txt" placeholder="Enter your task">
+        </div>
+    </div>
+    
+
+    <script>
+        var task = document.getElementById("txt")
+
+        task.onkeydown = (event) => {
+            // console.log(event.key)
+
+            if(event.key == "Enter")
+            {
+                addTask()
+            }
+        }
+
+        function addTask()
+        {
+            // console.log("function is called")
+            var arr = []
+
+            if(localStorage.getItem("task"))
+            {
+                arr = JSON.parse(localStorage.getItem("task"))
+            }
+            // console.log(arr)
+
+            arr.push(task.value)
+            localStorage.setItem("task",JSON.stringify(arr))
+
+            display(task.value)
+
+            task.value = ""
+        }
+
+        function display(tasks)
+        {
+            var div1 = document.getElementById("container")
+            var div2 = document.createElement("div")
+            var hr = document.createElement("hr")
+
+            var chk = document.createElement("input")
+            chk.type = "checkbox"
+
+            var complete = document.createElement("input")
+            complete.type = "button"
+            complete.value = "X"
+
+            var span = document.createElement("span")
+
+            span.append(tasks)
+            div2.appendChild(span)
+            div2.appendChild(chk)
+            div2.appendChild(complete)
+            div2.appendChild(hr)
+
+            div1.append(div2)
+
+            chk.onclick = () => {
+                if(chk.checked)
+                {
+                    span.style.textDecoration = "line-through"
+                }
+                else
+                {
+                    span.style.textDecoration = "none" 
+                }
+            }
+
+            complete.onclick = () => {
+                // console.log(event.target)    // it shows button click
+                // console.log(event.target.parentElement)
+                // console.log(event.target.parentElement.children)
+                // console.log(event.target.parentElement.children[0].innerText)
+
+                let parentdiv = event.target.parentElement
+                let children = event.target.parentElement.children
+                let text = event.target.parentElement.children[0].innerText
+
+                // access the index of target element
+
+                let a = JSON.parse(localStorage.getItem("task"))
+                // console.log(a)
+                let ind = a.indexOf(text)
+                // alert(ind)
+
+                a.splice(ind, 1)
+                // console.log(a)
+
+                localStorage.setItem("task", JSON.stringify(a))
+
+                // also delete the parentDiv
+                parentdiv.remove()
+            }
+        }
+
+        document.body.onload = function()
+        {
+            let a = JSON.parse(localStorage.getItem("task"))
+
+            a.forEach((value) => {
+                display(value)
+            })
+        }
+        
+    </script>
+</body>
+</html>
